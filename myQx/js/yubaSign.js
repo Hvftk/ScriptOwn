@@ -165,7 +165,7 @@ class DouYu {
             (${data["levelScore"]}/${data["exp"]})[${data["count"]}天]\n`;
           } else {
             console.log(message)
-            content += `${groupItem["group_name"]}[签到失败], 详细日志见log\n`;
+            content += `${groupItem["group_name"]}[签到失败], ${message}\n`;
           }
         },
         reason => {
