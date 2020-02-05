@@ -1,0 +1,7 @@
+# Update-2020.01.06 Self-use rule
+# auth: pq
+DOMAIN-SUFFIX,rtbapi.douyucdn.cn,REJECT
+DOMAIN-SUFFIX,adtracking.quickapi.net,REJECT
+HOST-KEYWORD,wostore.cn,REJECT
+HOST-SUFFIX,qvb.qcloud.com,REJECT
+HOST-SUFFIX,fengkongcloud.com,REJECT
