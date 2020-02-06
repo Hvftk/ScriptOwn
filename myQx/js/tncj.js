@@ -56,7 +56,7 @@ class TNCJ {
     console.log(res)
     const {answer, quiz} = res["data"]
     config.rightAns = answer
-    config.notify(quiz, config["answer"][answer], "")
+    config.notify(quiz, config.answerObj[answer], "")
     config.done()
   }
 }
