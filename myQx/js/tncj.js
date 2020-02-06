@@ -65,6 +65,8 @@ const start = () => {
     if (config.reqUrl.match(config.findQuizUrl)) {
         const tncj = new TNCJ()
         tncj.findQuiz()        
+    } else {
+      config.done()
     }
 }
 
