@@ -161,8 +161,7 @@ class DouYu {
             parseInt(status_code) === expectData["status_code"] &&
             message == expectData["message"]
           ) {
-            content += `${groupItem["group_name"]}[Lv${data["level"]}]
-            (${data["levelScore"]}/${data["exp"]})[${data["count"]}天]\n`;
+            content += `${groupItem["group_name"]}[Lv${data["level"]}](${data["levelScore"]}/${data["exp"]})[${data["count"]}天]\n`;
           } else {
             console.log(message)
             content += `${groupItem["group_name"]}[签到失败], ${message}\n`;
