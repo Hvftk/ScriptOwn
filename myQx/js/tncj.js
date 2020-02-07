@@ -51,7 +51,7 @@ class TNCJ {
   energy() {
     const res = config.decrypt(config.resBody)
     console.log(res)
-    res["data"]["energy"] = 10
+    // res["data"]["energy"] = 10
     res["data"]["nextEnergyAt"] = Math.round(new Date().getTime()/1000) + 1
     config.done(config.encrypt(res))
   }
