@@ -13,7 +13,7 @@ const config = {
       1: "正确",
       0: "错误"
   },
-  answerUrl: "answer",
+  energyUrl: "energy",
   findQuizUrl: "findQuiz",
   resBody: $response.body,
   reqUrl: $request.url,
@@ -42,14 +42,18 @@ const config = {
   notify: (titile, subTitle = "", content = "") => {
     $notify(titile, subTitle, content);
   },
-  done() {
-    $done({})
+  done(obj) {
+    $done(obj)
   }
 };
 
 class TNCJ {
-  answer() {
-
+  energy() {
+    const res = config.decrypt(config.resBody)
+    console.log(res)
+    res["data"]["energy"] = 10
+    res["data"]["nextEnergyAt"] = Math.round(new Date().getTime()/1000) + 1
+    config.done(config.encrypt(res))
   }
   findQuiz() {
     const res = config.decrypt(config.resBody)
@@ -57,7 +61,7 @@ class TNCJ {
     const {answer, quiz} = res["data"]
     config.rightAns = answer
     config.notify(quiz, config.answerObj[answer], "")
-    config.done()
+    config.done({})
   }
 }
 
@@ -65,9 +69,11 @@ const start = () => {
     if (config.reqUrl.match(config.findQuizUrl)) {
         const tncj = new TNCJ()
         tncj.findQuiz()        
-    } else {
-      config.done()
     }
+    if (config.reqUrl.match(config.energyUrl)) {
+      const tncj = new TNCJ()
+      tncj.energy()        
+  }
 }
 
 start()
