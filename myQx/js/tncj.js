@@ -51,8 +51,9 @@ class TNCJ {
   energy() {
     const res = config.decrypt(config.resBody)
     console.log(res)
-    // res["data"]["energy"] = 10
-    res["data"]["nextEnergyAt"] = res["data"]["sysTime"] + 1
+    res["data"]["energy"] = 5
+    res["data"]["lastEnergyAt"] = res["data"]["sysTime"] - 5
+    res["data"]["nextEnergyAt"] = res["data"]["sysTime"] + 5
     config.done(config.encrypt(res))
   }
 
