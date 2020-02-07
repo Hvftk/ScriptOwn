@@ -49,12 +49,7 @@ const config = {
 
 class TNCJ {
   energy() {
-    const res = config.decrypt(config.resBody)
-    console.log(res)
-    res["data"]["energy"] = 1
-    res["data"]["lastEnergyAt"] = res["data"]["sysTime"] - 5
-    res["data"]["nextEnergyAt"] = res["data"]["sysTime"] + 5
-    config.done(config.encrypt(res))
+
   }
 
   findQuiz() {
@@ -74,11 +69,9 @@ const start = () => {
     if (config.reqUrl.match(config.findQuizUrl)) {
         const tncj = new TNCJ()
         tncj.findQuiz()        
+    } else {
+      config.done({})
     }
-    if (config.reqUrl.match(config.energyUrl)) {
-      const tncj = new TNCJ()
-      tncj.energy()        
-  }
 }
 
 start()
