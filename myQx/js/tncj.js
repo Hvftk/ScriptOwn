@@ -55,14 +55,18 @@ class TNCJ {
     res["data"]["nextEnergyAt"] = Math.round(new Date().getTime()/1000) + 1
     config.done(config.encrypt(res))
   }
+
   findQuiz() {
     const res = config.decrypt(config.resBody)
     console.log(res)
-    const {answer, quiz} = res["data"]
-    config.rightAns = answer
-    config.notify(quiz, config.answerObj[answer], "")
+	 if (res["errcode"] == 0 ) {
+	 	const {answer, quiz} = res["data"]
+    	config.rightAns = answer
+    	config.notify(quiz, config.answerObj[answer], "")
+	}
     config.done({})
   }
+
 }
 
 const start = () => {
