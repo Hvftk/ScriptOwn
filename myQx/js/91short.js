@@ -1,4 +1,4 @@
 let path = $request.path 
-path = path.replace(/&dutation=d+/, "")
+path = path.replace(/&duration=d+/, "")
 console.log(path)
 $done({path: path});
