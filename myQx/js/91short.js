@@ -1,4 +1,4 @@
-let url = $request.url;
-url = url.replace(/&duration=(d+)/g, "")
-console.log($request.path)
-$done({url});
+let path = $request.path 
+path = path.replace(/&dutation=d+/, "")
+console.log(path)
+$done({path: path});
