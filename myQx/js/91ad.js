@@ -1,5 +1,5 @@
 var url = $request.url;
-if (url.match("91_") || url.match("xj_")) {
+if (url.match("ads")) {
 	$done({path: ""})
 } else {
 	$done({})
