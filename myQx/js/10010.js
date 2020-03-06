@@ -95,7 +95,7 @@ class ChinaUnicom {
       }
       commonFunc.get(params, (err, response, data) => {
         const resCookie = response.headers['Set-Cookie']
-        doSignCookie = doSignCookie.replace(/route=([^;]*)/, resCookie.match(/route5=([^;]*)/)[0])
+        doSignCookie = doSignCookie.replace(/route5=([^;]*)/, resCookie.match(/route5=([^;]*)/)[0])
           .replace(/JSESSIONID=([^;]*)/, resCookie.match(/JSESSIONID=([^;]*)/)[0])
         headers['Cookie'] = doSignCookie
         commonFunc.setData(doSignHeader, JSON.stringify(headers))
@@ -112,8 +112,7 @@ class ChinaUnicom {
       body: 'className=signinIndex',
       headers: JSON.parse(commonFunc.getData(doSignHeader))
     }
-    console.log(commonFunc.getData(doSignHeader))
-    commonFunc.get(parmas, (err, response, data) => {
+    commonFunc.post(parmas, (err, response, data) => {
       if (err) {
         console.log(`中国联通签到失败: ${err}`)
         commonFunc.notify("中国联通", `${content.failContent}`, '查看log')
