@@ -5,12 +5,10 @@ Create At 2020-03-06
 
 USAGE：
 1. 打开联通手机营业厅，点击签到
-2. 打开https://yuba.douyu.com并登陆[open url and login]
-3. 打开QX，刷新页面，提示[获取鱼吧关注列表]。[open qx, refresh page]
 [task_local]
 1 0 * * * path/10010.js
 [rewrite_local]
-^https://yuba.douyu.com/wbapi/web/group/myFollow url script-request-header own/myQx/js/yubaSign.js
+^https://act.10010.com/SigninApp(*.?)/signin/(querySigninActivity|daySign).(htm|do) url script-request-header own/myQx/js/10010.js
 MITM = act.10010.com
 */
 
@@ -105,8 +103,8 @@ class ChinaUnicom {
       })
     })
   }
-  doSign = async () => {
-    await this.refreshToken()
+  doSign() {
+    this.refreshToken()
     const { needUrl, doSignHeader, content } = this.config();
     const parmas = {
       url: needUrl.doSignUrl,
