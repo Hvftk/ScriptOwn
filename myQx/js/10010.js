@@ -27,7 +27,7 @@ const commonFunc = {
     $prefs.setValueForKey(value, key);
   },
   getData: key => {
-    return $prefs.valueForKey(key);
+    return $prefs.valueForKey(key) || '{}';
   },
   notify: (titile = "", subTitle = "", content = "") => {
     $notify(titile, subTitle, content);
@@ -60,7 +60,8 @@ class ChinaUnicom {
         // 获取签到必须参数route5, jsessionid
         querySignUrl: "https://act.10010.com/SigninApp/signin/querySigninActivity.htm",
         // 签到
-        doSignUrl: "https://act.10010.com/SigninApp3.0_huidu/signin/daySign.do"
+        doSignUrl: "https://act.10010.com/SigninApp3.0_huidu/signin/daySign.do",
+        rewardUrl: 'https://act.10010.com/SigninApp3.0_huidu/signin/rewardReminder.do'
       },
       content: {
         refreshContent: '获取Refresh Token成功 🎉',
@@ -78,7 +79,7 @@ class ChinaUnicom {
       commonFunc.setData(querySignUrl, commonFunc.getUrl());
       commonFunc.notify("中国联通", "", content.refreshContent);
     }
-    if (commonFunc.getUrl().match(needUrl.doSignUrl)) {
+    if (commonFunc.getUrl().match(needUrl.doSignUrl) || commonFunc.getUrl().match(needUrl.rewardUrl)) {
       commonFunc.setData(doSignHeader, JSON.stringify(commonFunc.getHeader()));
       commonFunc.notify("中国联通", "", content.cookieContent);
     }
