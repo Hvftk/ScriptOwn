@@ -5,3 +5,4 @@ DOMAIN-SUFFIX,adtracking.quickapi.net,REJECT
 HOST-KEYWORD,wostore.cn,REJECT
 HOST-SUFFIX,qvb.qcloud.com,REJECT
 HOST-SUFFIX,fengkongcloud.com,REJECT
+DOMAIN-SUFFIX,m1.ad.10010.com,REJECT

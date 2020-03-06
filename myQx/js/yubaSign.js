@@ -11,7 +11,7 @@ USAGE：
 1 0 * * * path/yubaSign.js
 [rewrite_local]
 ^https://yuba.douyu.com/wbapi/web/group/myFollow url script-request-header own/myQx/js/yubaSign.js
-MIMT = yuba.douyu.com
+MITM = yuba.douyu.com
 */
 
 // common func
@@ -51,7 +51,7 @@ class DouYu {
         // 关注鱼吧列表
         followRoomUrl: `https://yuba.douyu.com/wbapi/web/group/myFollow?page=1&limit=${
           this.limit
-        }&timestamp=${Math.random()}`,
+          }&timestamp=${Math.random()}`,
         // 签到
         signUrl: `https://yuba.douyu.com/ybapi/topic/sign?timestamp=${Math.random()}`
       },
