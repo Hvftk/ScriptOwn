@@ -58,10 +58,10 @@ class ChinaUnicom {
       doSignHeader: "doSignHeader",
       needUrl: {
         // 获取签到必须参数route5, jsessionid
-        querySignUrl: "https://act.10010.com/SigninApp/signin/querySigninActivity.htm",
+        querySignUrl: "querySigninActivity.htm",
         // 签到
         doSignUrl: "https://act.10010.com/SigninApp3.0_huidu/signin/daySign.do",
-        rewardUrl: 'https://act.10010.com/SigninApp3.0_huidu/signin/rewardReminder.do'
+        rewardUrl: 'rewardReminder.do'
       },
       content: {
         refreshContent: '获取Refresh Token成功 🎉',
@@ -104,14 +104,15 @@ class ChinaUnicom {
       })
     })
   }
-  doSign() {
-    this.refreshToken()
+  async doSign() {
+    await this.refreshToken()
     const { needUrl, doSignHeader, content } = this.config();
     const parmas = {
       url: needUrl.doSignUrl,
       body: 'className=signinIndex',
       headers: JSON.parse(commonFunc.getData(doSignHeader))
     }
+    console.log(commonFunc.getData(doSignHeader))
     commonFunc.get(parmas, (err, response, data) => {
       if (err) {
         console.log(`中国联通签到失败: ${err}`)
@@ -147,10 +148,8 @@ class ChinaUnicom {
 const start = () => {
   const cu = new ChinaUnicom();
   if (commonFunc.isRequest()) {
-    console.log("get cookie");
     cu.getCookie();
   } else {
-    console.log("sign");
     cu.doSign();
   }
   commonFunc.done();
