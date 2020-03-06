@@ -117,6 +117,7 @@ class ChinaUnicom {
         console.log(`中国联通签到失败: ${err}`)
         commonFunc.notify("中国联通", `${content.failContent}`, '查看log')
       } else {
+        data = JSON.parse(data)
         if (data['msgCode']) {
           let subTitle = ''
           let txt = ''
