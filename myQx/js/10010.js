@@ -124,6 +124,7 @@ class ChinaUnicom {
           switch (data['msgCode']) {
             case "0000":
               const { continuCount, prizeCount, growthgetGrowScore } = data
+              console.log(`growth: ${growthgetGrowScore}`)
               subTitle = content.successContent
               txt = `连续签到${continuCount}天, 金币${prizeCount}, 成长值${growthgetGrowScore}`
               break;
@@ -138,7 +139,7 @@ class ChinaUnicom {
           commonFunc.notify("中国联通", subTitle, txt)
         } else {
           if (data['loginCode']) {
-            commonFunc.notify("中国联通", '签到结果: 失败', `${expectData['loginCode']}`)
+            commonFunc.notify("中国联通", `${content.failContent}`, `${expectData['loginCode']}`)
           }
         }
       }
