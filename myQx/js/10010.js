@@ -57,10 +57,11 @@ class ChinaUnicom {
       querySignHeader: "querySignHeader",
       doSignHeader: "doSignHeader",
       needUrl: {
-        // 获取签到必须参数route5, jsessionid
+        // 获取签到必须参数route, jsessionid
         querySignUrl: "querySigninActivity.htm",
         // 签到
-        doSignUrl: "https://act.10010.com/SigninApp3.0_huidu/signin/daySign.do",
+        doSignSuffix: "daySign",
+        doSignUrl: "https://act.10010.com/SigninApp/signin/daySign",
         rewardUrl: 'rewardReminder.do'
       },
       content: {
@@ -68,7 +69,7 @@ class ChinaUnicom {
         cookieContent: '获取Cookie成功 🎉',
         successContent: '签到结果: 成功 🎉',
         failContent: '签到结果: 失败 ⚠️',
-        unkonwnContent: '签到结果: 未知 ⚠️'
+        unkonwnContent: '签到结果: 已签到或cookie失效 ⚠️'
       }
     };
   }
@@ -79,14 +80,14 @@ class ChinaUnicom {
       commonFunc.setData(querySignUrl, commonFunc.getUrl());
       commonFunc.notify("中国联通", "", content.refreshContent);
     }
-    if (commonFunc.getUrl().match(needUrl.doSignUrl) || commonFunc.getUrl().match(needUrl.rewardUrl)) {
+    if (commonFunc.getUrl().match(needUrl.doSignSuffix) || commonFunc.getUrl().match(needUrl.rewardUrl)) {
       commonFunc.setData(doSignHeader, JSON.stringify(commonFunc.getHeader()));
       commonFunc.notify("中国联通", "", content.cookieContent);
     }
   }
   refreshToken() {
     return new Promise(resolve => {
-      const { querySignHeader, doSignHeader, querySignUrl } = this.config();
+      const { querySignHeader, doSignHeader, querySignUrl, content } = this.config();
       const headers = JSON.parse(commonFunc.getData(doSignHeader))
       let doSignCookie = headers['Cookie']
       const params = {
@@ -95,11 +96,11 @@ class ChinaUnicom {
       }
       commonFunc.get(params, (err, response, data) => {
         const resCookie = response.headers['Set-Cookie']
-        doSignCookie = doSignCookie.replace(/route5=([^;]*)/, resCookie.match(/route5=([^;]*)/)[0])
+        doSignCookie = doSignCookie.replace(/route=([^;]*)/, resCookie.match(/route=([^;]*)/)[0])
           .replace(/JSESSIONID=([^;]*)/, resCookie.match(/JSESSIONID=([^;]*)/)[0])
         headers['Cookie'] = doSignCookie
         commonFunc.setData(doSignHeader, JSON.stringify(headers))
-        console.log("refresh token")
+        commonFunc.notify("中国联通", "", content.refreshContent);
         resolve('done')
       })
     })
@@ -109,7 +110,7 @@ class ChinaUnicom {
     const { needUrl, doSignHeader, content } = this.config();
     const parmas = {
       url: needUrl.doSignUrl,
-      body: 'className=signinIndex',
+      body: `version=${Math.random()}`,
       headers: JSON.parse(commonFunc.getData(doSignHeader))
     }
     commonFunc.post(parmas, (err, response, data) => {
@@ -117,30 +118,14 @@ class ChinaUnicom {
         console.log(`中国联通签到失败: ${err}`)
         commonFunc.notify("中国联通", `${content.failContent}`, '查看log')
       } else {
-        data = JSON.parse(data)
-        if (data['msgCode']) {
-          let subTitle = ''
-          let txt = ''
-          switch (data['msgCode']) {
-            case "0000":
-              const { continuCount, prizeCount, growthgetGrowScore } = data
-              console.log(`growth: ${growthgetGrowScore}`)
-              subTitle = content.successContent
-              txt = `连续签到${continuCount}天, 金币${prizeCount}, 成长值${growthgetGrowScore}`
-              break;
-            case "0008":
-              subTitle = content.failContent
-              txt = '已签到'
-              break
-            default:
-              subTitle = content.unkonwnContent
-              break;
-          }
-          commonFunc.notify("中国联通", subTitle, txt)
+        if (data === '{}') {
+          commonFunc.notify("中国联通", `${content.unkonwnContent}`)
         } else {
-          if (data['loginCode']) {
-            commonFunc.notify("中国联通", `${content.failContent}`, `${expectData['loginCode']}`)
-          }
+          data = JSON.parse(data)
+          const { newCoin, growthV, prizeCount, flowerCount } = data
+          subTitle = content.successContent
+          txt = `金币${newCoin}, 积分${prizeCount}, 成长值${growthV}, 鲜花${flowerCount}`
+          commonFunc.notify("中国联通", subTitle, txt)
         }
       }
     })
