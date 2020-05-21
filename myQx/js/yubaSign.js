@@ -155,7 +155,6 @@ class DouYu {
       $task.fetch(params).then(
         response => {
           const res = JSON.parse(response.body);
-          console.log(res)
           const { status_code, message, data } = res;
           if (
             parseInt(status_code) === expectData["status_code"] &&
@@ -163,7 +162,6 @@ class DouYu {
           ) {
             content += `${groupItem["group_name"]}[Lv${data["level"]}](${data["levelScore"]}/${data["exp"]})[${data["count"]}天]\n`;
           } else {
-            console.log(message)
             content += `${groupItem["group_name"]}[签到失败], ${message}\n`;
           }
         },
@@ -180,10 +178,8 @@ class DouYu {
 const start = () => {
   const douyu = new DouYu(20);
   if (commonFunc.isRequest()) {
-    console.log("get cookie");
     douyu.getCookie();
   } else {
-    console.log("sign");
     douyu.sign();
   }
   commonFunc.done();
