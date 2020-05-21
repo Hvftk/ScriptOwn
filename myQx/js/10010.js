@@ -55,14 +55,13 @@ class ChinaUnicom {
     return {
       querySignUrl: "querySignUrl",
       querySignHeader: "querySignHeader",
-      doSignHeader: "doSignHeader",
+      daySignHeader: "daySignHeader",
       needUrl: {
         // 获取签到必须参数route, jsessionid
         querySignUrl: "querySigninActivity.htm",
         // 签到
-        doSignSuffix: "daySign",
-        doSignUrl: "https://act.10010.com/SigninApp/signin/daySign",
-        rewardUrl: 'rewardReminder.do'
+        daySignSuffix: "daySign",
+        daySignUrl: "https://act.10010.com/SigninApp/signin/daySign"
       },
       content: {
         refreshContent: '获取Refresh Token成功 🎉',
@@ -74,44 +73,44 @@ class ChinaUnicom {
     };
   }
   getCookie() {
-    const { needUrl, querySignHeader, doSignHeader, querySignUrl, content } = this.config();
+    const { needUrl, querySignHeader, daySignHeader, querySignUrl, content } = this.config();
     if (commonFunc.getUrl().match(needUrl.querySignUrl)) {
       commonFunc.setData(querySignHeader, JSON.stringify(commonFunc.getHeader()));
       commonFunc.setData(querySignUrl, commonFunc.getUrl());
       commonFunc.notify("中国联通", "", content.refreshContent);
     }
-    if (commonFunc.getUrl().match(needUrl.doSignSuffix) || commonFunc.getUrl().match(needUrl.rewardUrl)) {
-      commonFunc.setData(doSignHeader, JSON.stringify(commonFunc.getHeader()));
+    if (commonFunc.getUrl().match(needUrl.daySignSuffix)) {
+      commonFunc.setData(daySignHeader, JSON.stringify(commonFunc.getHeader()));
       commonFunc.notify("中国联通", "", content.cookieContent);
     }
   }
   refreshToken() {
     return new Promise(resolve => {
-      const { querySignHeader, doSignHeader, querySignUrl, content } = this.config();
-      const headers = JSON.parse(commonFunc.getData(doSignHeader))
-      let doSignCookie = headers['Cookie']
+      const { querySignHeader, daySignHeader, querySignUrl, content } = this.config();
+      const headers = JSON.parse(commonFunc.getData(daySignHeader))
+      let daySignCookie = headers['Cookie']
       const params = {
         url: commonFunc.getData(querySignUrl),
         headers: JSON.parse(commonFunc.getData(querySignHeader))
       }
       commonFunc.get(params, (err, response, data) => {
         const resCookie = response.headers['Set-Cookie']
-        doSignCookie = doSignCookie.replace(/route=([^;]*)/, resCookie.match(/route=([^;]*)/)[0])
+        daySignCookie = daySignCookie.replace(/route=([^;]*)/, resCookie.match(/route=([^;]*)/)[0])
           .replace(/JSESSIONID=([^;]*)/, resCookie.match(/JSESSIONID=([^;]*)/)[0])
-        headers['Cookie'] = doSignCookie
-        commonFunc.setData(doSignHeader, JSON.stringify(headers))
+        headers['Cookie'] = daySignCookie
+        commonFunc.setData(daySignHeader, JSON.stringify(headers))
         commonFunc.notify("中国联通", "", content.refreshContent);
         resolve('done')
       })
     })
   }
-  async doSign() {
-    await this.refreshToken()
-    const { needUrl, doSignHeader, content } = this.config();
+  async daySign() {
+    // await this.refreshToken()
+    const { needUrl, daySignHeader, content } = this.config();
     const parmas = {
-      url: needUrl.doSignUrl,
+      url: needUrl.daySignUrl,
       body: `version=${Math.random()}`,
-      headers: JSON.parse(commonFunc.getData(doSignHeader))
+      headers: JSON.parse(commonFunc.getData(daySignHeader))
     }
     commonFunc.post(parmas, (err, response, data) => {
       if (err) {
@@ -121,10 +120,12 @@ class ChinaUnicom {
         if (data === '{}') {
           commonFunc.notify("中国联通", `${content.unkonwnContent}`)
         } else {
+          console.log(data)
           data = JSON.parse(data)
-          const { newCoin, growthV, prizeCount, flowerCount } = data
+          console.log(data)
+          const { growthV, prizeCount, flowerCount } = data
           subTitle = content.successContent
-          txt = `金币${newCoin}, 积分${prizeCount}, 成长值${growthV}, 鲜花${flowerCount}`
+          txt = `积分${prizeCount}, 成长值${growthV}, 鲜花${flowerCount}`
           commonFunc.notify("中国联通", subTitle, txt)
         }
       }
@@ -136,7 +137,7 @@ const start = () => {
   if (commonFunc.isRequest()) {
     cu.getCookie();
   } else {
-    cu.doSign();
+    cu.daySign();
   }
   commonFunc.done();
 };
