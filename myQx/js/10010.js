@@ -68,7 +68,8 @@ class ChinaUnicom {
         cookieContent: '获取Cookie成功 🎉',
         successContent: '签到结果: 成功 🎉',
         failContent: '签到结果: 失败 ⚠️',
-        unkonwnContent: '签到结果: 已签到或cookie失效 ⚠️'
+        repeatContent: '签到结果: 重复签到 ⚠️',
+        unkonwnContent: '签到结果: cookie失效 ⚠️'
       }
     };
   }
@@ -94,18 +95,22 @@ class ChinaUnicom {
         headers: JSON.parse(commonFunc.getData(querySignHeader))
       }
       commonFunc.get(params, (err, response, data) => {
-        const resCookie = response.headers['Set-Cookie']
-        daySignCookie = daySignCookie.replace(/route=([^;]*)/, resCookie.match(/route=([^;]*)/)[0])
-          .replace(/JSESSIONID=([^;]*)/, resCookie.match(/JSESSIONID=([^;]*)/)[0])
-        headers['Cookie'] = daySignCookie
-        commonFunc.setData(daySignHeader, JSON.stringify(headers))
-        commonFunc.notify("中国联通", "", content.refreshContent);
-        resolve('done')
+        try {
+          const resCookie = response.headers['Set-Cookie']
+          daySignCookie = daySignCookie.replace(/route=([^;]*)/, resCookie.match(/route=([^;]*)/)[0])
+            .replace(/JSESSIONID=([^;]*)/, resCookie.match(/JSESSIONID=([^;]*)/)[0])
+          headers['Cookie'] = daySignCookie
+          commonFunc.setData(daySignHeader, JSON.stringify(headers))
+          resolve()
+        } catch (error) {
+          console.log('get refreshToken error')
+          resolve()
+        }
       })
     })
   }
   async daySign() {
-    // await this.refreshToken()
+    await this.refreshToken()
     const { needUrl, daySignHeader, content } = this.config();
     const parmas = {
       url: needUrl.daySignUrl,
@@ -117,16 +122,13 @@ class ChinaUnicom {
         console.log(`中国联通签到失败: ${err}`)
         commonFunc.notify("中国联通", `${content.failContent}`, '查看log')
       } else {
-        if (data === '{}') {
-          commonFunc.notify("中国联通", `${content.unkonwnContent}`)
+        const res = JSON.parse(data)
+        if (data == '{}') {
+          commonFunc.notify("中国联通", `${content.repeatContent}`)
+        } else if (res['growthV']) {
+          commonFunc.notify("中国联通", `${content.successContent}`)
         } else {
-          console.log(data)
-          data = JSON.parse(data)
-          console.log(data)
-          const { growthV, prizeCount, flowerCount } = data
-          subTitle = content.successContent
-          txt = `积分${prizeCount}, 成长值${growthV}, 鲜花${flowerCount}`
-          commonFunc.notify("中国联通", subTitle, txt)
+          commonFunc.notify("中国联通", `${content.unkonwnContent}`)
         }
       }
     })
