@@ -5,3 +5,5 @@ HOST-KEYWORD,wostore.cn,REJECT
 HOST-SUFFIX,qvb.qcloud.com,REJECT
 HOST-SUFFIX,fengkongcloud.com,REJECT
 DOMAIN-SUFFIX,m1.ad.10010.com,REJECT
+DOMAIN-SUFFIX,v1.cnzz.com,REJECT
+DOMAIN-SUFFIX,ad.caiyunapp.com,REJECT
