@@ -8,7 +8,3 @@ DOMAIN-SUFFIX,m1.ad.10010.com,REJECT
 DOMAIN-SUFFIX,v1.cnzz.com,REJECT
 DOMAIN-SUFFIX,ad.caiyunapp.com,REJECT
 
-
-DOMAIN-SUFFIX,question-zh.hortor.net,tnwz
-DOMAIN-SUFFIX,platform.hortorgames.com,tnwz
-
