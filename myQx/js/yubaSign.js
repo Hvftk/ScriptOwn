@@ -32,7 +32,7 @@ const commonFunc = {
     $notify(titile, subTitle, content);
   },
   done: () => {
-    $done({});
+    typeof $request != "undefined" ? $done({}) : "";
   }
 };
 
