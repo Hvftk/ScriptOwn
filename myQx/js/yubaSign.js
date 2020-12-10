@@ -128,6 +128,7 @@ class DouYu {
         commonFunc.notify("获取鱼吧关注列表", "失败", err);
       }
     );
+    $done({});
   }
   sign() {
     const {
@@ -172,6 +173,7 @@ class DouYu {
     }
     setTimeout(() => {
       commonFunc.notify("鱼吧签到", "", content);
+      $done({});
     }, 1500)
   }
 }
